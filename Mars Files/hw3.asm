@@ -2,7 +2,7 @@
 #Name : Aditya Balwani
 #SBUID : 109353930
 .data
-	valid0: .ascii "0"
+	valid0: .byte '0'
 	null: .byte '\n'
 	validP0: .asciiz "+0"
 	validN0: .asciiz "-0"
@@ -23,7 +23,7 @@
 	signPositive: .asciiz "Sign : 0 +\n"
 	signNegative: .asciiz "Sign : 1 -\n"
 	exponent: .asciiz "Exponent : "
-	mantissa: .asciiz "Fraction : "
+	fraction: .asciiz "Fraction : "
 	change: .byte '\0'
 	.align 2
 	temp: .float 0.0
@@ -38,6 +38,7 @@
 	float8: .float 8
 	float9: .float 9
 	point: .byte '.'
+	temp2: .space 32
 	
 	
 
@@ -315,6 +316,8 @@
 		jr $ra
 		
 	print_parts:
+		addi $sp, $sp, -4
+  		sw $ra, 0($sp)
 		li $v0,2
 		syscall
 		li $v0, 11
@@ -360,15 +363,128 @@
 		la $a0, exponent
 		li $v0, 4
 		syscall
-		andi $t1, $t0, 0x7f800000
+		andi $t1, $t0, 0x7f800000 #Mask mantissa and Sign
+		srl $t1, $t1, 23
+		
+		la $a0, ($t1)
+		jal printExponent
+		
+		li $v0, 11
+ 		li $a0, '\t' 		
+  		syscall
+  		
+  		la $a0, ($t1)
+  		li $v0, 1
+  		syscall
+  		
+		li $v0, 11
+ 		li $a0, '\n' 		
+  		syscall
+  		
+  		la $a0, fraction
+		li $v0, 4
+		syscall
+		
+		andi $t1, $t0, 0x007fffff #Mask Sign and Exponent
+		la $a0, ($t1)
+		jal printFraction
+		li $v0, 11
+ 		li $a0, '\t' 		
+  		syscall
+  		
+  		la $a0, ($t1)
+  		li $v0, 1
+  		syscall
+  		
+		li $v0, 11
+ 		li $a0, '\n' 		
+  		syscall
+		
+		lw $ra, 0($sp)
+		addi $sp, $sp, 4
 		jr $ra
 		
 	print_binary_product:
 		jr $ra
 	
 	arcLengthS:
+		addi $sp, $sp, -4
+  		sw $ra, 0($sp)
+  		mov.s $f8, $f12
+  		jal atof
+  		mov.s $f12, $f8
+  		mov.s $f13, $f0
+  		jal arcLength
+  		lw $ra, 0($sp)
+		addi $sp, $sp, 4
 		jr $ra
 		
+	product:
+		jr $ra	
+	printExponent:
+		add $t2, $zero,$a0
+		li $t3, 0x00000080
+		beqz $t2, noOnes
+		shiftRightLoop:
+			andi $t4, $t2, 0x00000001
+			bnez $t4, oneFound
+			srl $t2, $t2, 1
+			srl $t3, $t3, 1
+			j shiftRightLoop
+		oneFound:
+			and $t5, $t2, $t3
+			beqz $t5, printZero
+			li $v0, 11
+ 			li $a0, '1' 		
+  			syscall
+  			j incrementOneFoundLoop
+			printZero:
+				li $v0, 11
+ 				li $a0, '0' 		
+  				syscall
+  			incrementOneFoundLoop:
+  			srl $t3,$t3,1
+  			beqz $t3, endPrintExponent
+  		j oneFound
+  		noOnes:
+  			li $v0, 11
+ 			li $a0, '0' 		
+  			syscall
+  		endPrintExponent:
+  		jr $ra
+  		
+  	printFraction:
+		add $t2, $zero,$a0
+		li $t3, 0x00400000
+		beqz $t2, noOnes
+		shiftRightLoop2:
+			andi $t4, $t2, 0x00000001
+			bnez $t4, oneFound2
+			srl $t2, $t2, 1
+			srl $t3, $t3, 1
+			j shiftRightLoop2
+		oneFound2:
+			and $t5, $t2, $t3
+			beqz $t5, printZero2
+			li $v0, 11
+ 			li $a0, '1' 		
+  			syscall
+  			j incrementOneFoundLoop2
+			printZero2:
+				li $v0, 11
+ 				li $a0, '0' 		
+  				syscall
+  			incrementOneFoundLoop2:
+  			srl $t3,$t3,1
+  			beqz $t3, endPrintExponent2
+  		j oneFound2
+  		noOnes2:
+  			li $v0, 11
+ 			li $a0, '0' 		
+  			syscall
+  		endPrintExponent2:
+  		jr $ra
+  		
 	compareStrings:
 		add $t0, $zero, $zero
 		add $t1, $zero, $a0
