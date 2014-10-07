@@ -15,8 +15,8 @@
 	valid7: .byte '7'
 	valid8: .byte '8'
 	valid9: .byte '9'
-	validPlus: .ascii "+"
-	validMinus: .ascii "-"
+	validPlus: .byte '+'
+	validMinus: .byte '-'
 	validNaN:.asciiz "NaN\n"
 	validPInf:.asciiz "+Inf\n"
 	validNInf:.asciiz "-Inf\n"
@@ -24,6 +24,8 @@
 	signNegative: .asciiz "Sign : 1 -\n"
 	exponent: .asciiz "Exponent : "
 	fraction: .asciiz "Fraction : "
+	binProduct:.asciiz "Binary Product : "
+	power2: .asciiz " x 2^"
 	change: .byte '\0'
 	.align 2
 	temp: .float 0.0
@@ -325,12 +327,6 @@
 		syscall
 		la $t0, temp
 		mfc1 $t0, $f12
-		li $t2, 0x7fc00000
-		beq $t0, $t2, printNaN
-		li $t2, 0x7f800000
-		beq $t0, $t2, printPInf
-		li $t2, 0xff800000
-		beq $t0, $t2, printPInf
 		andi $t1, $t0,0x80000000
 		beqz $t1, printPosSign
 		la $a0, signNegative
@@ -339,23 +335,6 @@
 		j endSignPrint
 		printPosSign:
 			la $a0, signPositive
-			li $v0, 4
-			syscall
-			j endSignPrint
-			
-		printNaN:
-			la $a0, validNaN
-			li $v0, 4
-			syscall
-			j endSignPrint
-			
-		printPInf:
-			la $a0, validPInf
-			li $v0, 4
-			syscall
-			j endSignPrint
-		printNInf:
-			la $a0, validNInf
 			li $v0, 4
 			syscall
 			j endSignPrint
@@ -405,6 +384,38 @@
 		jr $ra
 		
 	print_binary_product:
+		addi $sp, $sp, -4
+  		sw $ra, 0($sp)
+  		la $a0, binProduct
+  		li $v0, 4
+  		syscall
+  		la $t0, temp
+		mfc1 $t0, $f12
+  		andi $t1, $t0, 0x007fffff #Mask Sign and Exponent
+		la $a0, ($t1)
+  		jal printMantissa
+  		la $a0, power2
+  		li $v0, 4
+  		syscall
+  		andi $t1, $t0, 0x7f800000 #Mask mantissa and Sign
+		srl $t1, $t1, 23
+		addi $t1, $t1, -128
+		bgez $t1, printPosSign2
+		j endSignPrint2
+		printPosSign2:
+			lb $a0, validPlus
+			li $v0, 11
+			syscall
+			j endSignPrint2
+		endSignPrint2:
+		la $a0, ($t1)
+		li $v0, 1
+		syscall
+		li $v0, 11
+ 		li $a0, '\n' 		
+  		syscall
+  		lw $ra, 0($sp)
+  		addi $sp, $sp, 4
 		jr $ra
 	
 	arcLengthS:
@@ -473,7 +484,7 @@
   	printFraction:
 		add $t2, $zero,$a0
 		li $t3, 0x00400000
-		beqz $t2, noOnes
+		beqz $t2, noOnes2
 		shiftRightLoop2:
 			andi $t4, $t2, 0x00000001
 			bnez $t4, oneFound2
@@ -493,13 +504,64 @@
   				syscall
   			incrementOneFoundLoop2:
   			srl $t3,$t3,1
-  			beqz $t3, endPrintExponent2
+  			beqz $t3, endPrintFraction
   		j oneFound2
   		noOnes2:
   			li $v0, 11
  			li $a0, '0' 		
   			syscall
-  		endPrintExponent2:
+  		endPrintFraction:
+  		jr $ra
+  		
+  	printMantissa:
+  		add $t2, $zero,$a0
+		li $t3, 0x00400000
+		beqz $t2, noOnes3
+		shiftLeftLoop:
+			and $t4, $t2, $t3
+			bnez $t4, shiftRightLoop3
+			srl $t3, $t3, 1
+			j shiftLeftLoop
+		shiftRightLoop3:
+			andi $t4, $t2, 0x00000001
+			bnez $t4, oneFound3
+			srl $t2, $t2, 1
+			srl $t3, $t3, 1
+			j shiftRightLoop3
+		oneFound3:
+			li $v0, 11
+ 			li $a0, '1' 		
+  			syscall
+  			li $v0, 11
+ 			li $a0, '.' 		
+  			syscall
+  			srl $t3,$t3,1
+  			continueOneFound:
+  			and $t5, $t2, $t3
+			beqz $t5, printZero3
+			li $v0, 11
+ 			li $a0, '1' 		
+  			syscall
+  			j incrementOneFoundLoop3
+			printZero3:
+				li $v0, 11
+ 				li $a0, '0' 		
+  				syscall
+  			incrementOneFoundLoop3:
+  			srl $t3,$t3,1
+  			beqz $t3, endPrintMan
+  		j continueOneFound
+  		noOnes3:
+  			li $v0, 11
+ 			li $a0, '0' 		
+  			syscall
+  			li $v0, 11
+ 			li $a0, '.' 		
+  			syscall
+  			li $v0, 11
+ 			li $a0, '0' 		
+  			syscall
+  		endPrintMan:
   		jr $ra
   		
 	compareStrings:
