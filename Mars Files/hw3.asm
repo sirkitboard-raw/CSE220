@@ -420,7 +420,24 @@
 		jr $ra
 		
 	product:
-		jr $ra	
+		li $t0, 1
+		add $t1, $zero, $a0
+		blt $t1, $t0, return0
+		li $t0, 0x3f800000
+		mtc1 $t0, $f0
+		productLoop:
+			lw $t2, 0($sp)
+			mtc1 $t2, $f4
+			mul.s $f0, $f0, $f4
+			addi $sp, $sp, 4
+			addi $t1, $t1, -1
+			beqz $t1, endProduct
+		j productLoop
+		return0:
+			li $t0, 1
+			mtc1 $t0, $f0
+		endProduct:
+		jr $ra
 	printExponent:
 		add $t2, $zero,$a0
 		li $t3, 0x00000080
