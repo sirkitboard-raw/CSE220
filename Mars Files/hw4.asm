@@ -3,6 +3,15 @@
 #SBUID : 109353920
 .data
 	invalid_base: .asciiz "Invalid Base"
+	.align 2
+	m1: .space 101
+	.align 2
+	m2: .space 101
+	.align 2
+	result: .space 101
+	nullChar: .byte '\0'
+	newLineChar: .asciiz "\n"
+	tabChar: .asciiz "\t"
 	
 .text
 	remainder:
@@ -191,4 +200,84 @@
 		returnC: 
 			add $v0, $t2, $zero
 			jr $ra
+		
+	rd100Chars:
+		add $t0, $zero, $a0
+		add $t5, $zero, $a0
+		add $t6, $zero, $a1
+		add $t7, $zero, $a2
+		la $a0, ($t6)
+		li $v0, 4
+		syscall
+		
+		la $a0, ($t0)
+		li $a1, 101
+		li $v0, 8
+		syscall
+		
+		li $t1, 0
+		li $t2, 100
+		la $t0, ($t5)
+		add $t0, $zero, $a0
+		lengthLoop2:
+			lb $t3,($t0)
+			beqz $t3, readAgain
+			addi $t0, $t0, 1
+			addi $t1, $t1, 1
+			beq $t1, $t2, finishRead
+			j lengthLoop2
+		readAgain:
+			la $a0, ($t7)
+			li $v0, 4
+			syscall
+			
+			la $a0, ($t5)
+			la $a1, ($t6)
+			la $a2, ($t7)
+			j rd100Chars
+		
+		finishRead:
+			addi $t0, $t0, 1
+			lb $t1, nullChar
+			sb $t1, 0($t0)
+		jr $ra
+		
+	printIntMatrix:
+		add $t0, $zero, $a0
+		li $t1, 0
+		printIntLoop:
+			lw $t2, ($t0)
+			la $a0, ($t2)
+			li $v0, 1
+			syscall
+			la $a0, tabChar
+			li $v0, 4
+			syscall
+			addi $t0, $t0, 4
+			addi $t1, $t1, 4
+			li $t3, 100
+			li $t4, 5
+			div $t1, $t4
+			mfhi $t2
+			bge $t1, $t3, endPrintIntMatrixLoop
+			beqz $t2, printNewLine
+			j printIntLoop
+			printNewLine:
+				la $a0, newLineChar
+				li $v0, 4
+				syscall	
+			j printIntLoop
+		endPrintIntMatrixLoop:
+			la $a0, newLineChar
+			li $v0, 4
+			syscall
+		jr $ra
+	
+	matrixMult:
+		jr $ra
+		
+	
+		
+			
+		
 		
