@@ -17,6 +17,14 @@
 	k: .word 0
 	
 .text
+	#---------------------------------------------------------------------------
+	#---------------------------------Remainder---------------------------------
+	#---------------------------------------------------------------------------
+	# Returns the remainder of a0/a1
+	# Arguments : $a0, Num, The number to be divided
+	# 	      $a1, Div, The divisor
+	# Return: $v0, The remainder of num/div
+	#---------------------------------------------------------------------------
 	remainder:
 		add $t0, $zero, $a0
 		add $t1, $zero, $a1
@@ -34,6 +42,14 @@
 		add $v0, $zero, $t0
 		jr $ra
 		
+	#---------------------------------------------------------------------------
+	#-------------------------------printBaase----------------------------------
+	#---------------------------------------------------------------------------
+	# Prints a variable in the required in the base
+	# Arguments : $a0, Num, The number to be printed
+	# 	      $a1, Base, The base in which the num is to be printed
+	# Return: void
+	#---------------------------------------------------------------------------
 	printBase:
 		add $t0, $zero, $a0
 		add $t1, $zero, $a1
@@ -70,6 +86,16 @@
 			syscall
 		jr $ra
 	
+	#---------------------------------------------------------------------------
+	#-----------------------------Levenshtein Distance--------------------------
+	#---------------------------------------------------------------------------
+	# Returns the edit distance between 2 strings
+	# Arguments : $a0, String s, The First string 
+	# 	      $a1, Int lenS, The length of the first string
+	#	      $a2, String t, The second string
+	#	      $a3, Int lenT, The length of the second string
+	# Return: $v0, Int, The edit distance between the 2 strings
+	#---------------------------------------------------------------------------
 	levenshteinDistance:
 		add $t0, $zero, $a1
 		add $t1, $zero, $a3		
@@ -173,7 +199,13 @@
 		returnLenT:
 			add $v0, $zero, $t1
 			jr $ra
-	
+	#---------------------------------------------------------------------------
+	#--------------------------------String Length-----------------------------
+	#---------------------------------------------------------------------------
+	# Returns the the length of a string
+	# Arguments : $a0, String, The string whose length is to be found
+	# Return: $v0, Int, the length of the string
+	#---------------------------------------------------------------------------
 	strlen:
 		li $t0, 0
 		add $t1, $zero, $a0
@@ -187,6 +219,15 @@
 			add $v0, $t0, $zero
 		jr $ra
 	
+	#---------------------------------------------------------------------------
+	#---------------------------------minimum-----------------------------------
+	#---------------------------------------------------------------------------
+	# Returns the minumum value out of three arguments
+	# Arguments : $a0, Int a, the first number
+	# 	      $a1, Int b, the second number
+	#	      $a2, Int c, the third number
+	# Return: $v0, The minimum value out of a, b and c
+	#---------------------------------------------------------------------------
 	minimum:
 		add $t0, $zero, $a0
 		add $t1, $zero, $a1
@@ -203,7 +244,15 @@
 		returnC: 
 			add $v0, $t2, $zero
 			jr $ra
-		
+	#---------------------------------------------------------------------------
+	#---------------------------------read100Chars------------------------------
+	#---------------------------------------------------------------------------
+	# Reads a 100 characters from the user and stores in an array
+	# Arguments : $a0, Char arr[], The array in which the characters are to be stored
+	# 	      $a1, String prompt, the prompt to be printed before reading
+	#	      $a2, String error, the error to be displayed if input is not 100
+	# Return: void
+	#---------------------------------------------------------------------------	
 	rd100Chars:
 		add $t0, $zero, $a0
 		add $t5, $zero, $a0
@@ -244,7 +293,14 @@
 			lb $t1, nullChar
 			sb $t1, 0($t0)
 		jr $ra
-		
+	
+	#---------------------------------------------------------------------------
+	#--------------------------------printIntMatrix-----------------------------
+	#---------------------------------------------------------------------------
+	# Prints a char array as a 5x5 int array
+	# Arguments : $a0, Char arr[], The array that is to be printed
+	# Return: Void
+	#---------------------------------------------------------------------------
 	printIntMatrix:
 		add $t0, $zero, $a0
 		li $t1, 0
@@ -276,6 +332,16 @@
 			syscall
 		jr $ra
 	
+	#---------------------------------------------------------------------------
+	#---------------------------------matrixMult--------------------------------
+	#---------------------------------------------------------------------------
+	# Multiplies two 5x5 matrices
+	# Arguments : $a0, Int matrixA[5][5], The first matrix
+	# 	      $a1, Int matrixB[5][5], The second matrix
+	#	      $a2, Int matrixC[5][5], The third matrix in which the product
+	#				       of the first 2 is tored
+	# Return: Void
+	#---------------------------------------------------------------------------
 	matrixMult:
 		lw $s0, i
 		li $t7, 5
@@ -342,9 +408,3 @@
 						
 		endMatrixMult:
 		jr $ra
-		
-	
-		
-			
-		
-		
