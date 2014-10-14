@@ -12,6 +12,9 @@
 	nullChar: .byte '\0'
 	newLineChar: .asciiz "\n"
 	tabChar: .asciiz "\t"
+	i: .word 0
+	j: .word 0
+	k: .word 0
 	
 .text
 	remainder:
@@ -274,6 +277,70 @@
 		jr $ra
 	
 	matrixMult:
+		lw $s0, i
+		li $t7, 5
+		bge $s0, $t7 endMatrixMult
+			lw $s1, j
+			bge $s1, $t7, incrementI
+				lw $s2, k
+				bge $s2, $t7, incrementJ
+					li $t6, 20
+					li $t5, 4
+					
+					mul $t1,$s0, $t6
+					mul $t4, $s2, $t5
+					add $t1, $t1, $t4
+					add $t1, $a0, $t1
+					lw $t1, 0($t1)
+					
+					mul $t2,$s2, $t6
+					mul $t4, $s1, $t5
+					add $t2, $t2, $t4
+					add $t2, $a1, $t2
+					lw $t2, 0($t2)
+					
+					mul $t0,$s0, $t6
+					mul $t4, $s1, $t5
+					add $t0, $t0, $t4
+					add $t0, $a2, $t0
+					lw $t3, 0($t0)
+					
+					mul $t1, $t1, $t2
+					addu $t3, $t1, $t3
+					sw $t3, 0($t0)
+					
+					addi $s2, $s2, 1
+					sw $s2, k
+					
+					addi $sp, $sp, -4
+					sw $ra, 0($sp)
+					jal matrixMult
+					lw $ra, 0($sp)
+					addi $sp, $sp, 4
+					
+				incrementJ:
+				li $s2, 0
+				sw $s2, k
+				addi $s1, $s1, 1
+				sw $s1, j
+				addi $sp, $sp, -4
+				sw $ra, 0($sp)
+				jal matrixMult
+				lw $ra, 0($sp)
+				addi $sp, $sp, 4
+			
+			incrementI:
+			li $s1, 0
+			sw $s1, j
+			addi $s0, $s0, 1
+			sw $s0, i
+			addi $sp, $sp, -4
+			sw $ra, 0($sp)
+			jal matrixMult
+			lw $ra, 0($sp)
+			addi $sp, $sp, 4
+						
+		endMatrixMult:
 		jr $ra
 		
 	
