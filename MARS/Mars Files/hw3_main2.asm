@@ -18,11 +18,68 @@ arclength: .asciiz "Arc length s: "
 .text
 .globl _start
 
+
+
 ####################################################################
 # This is the "main" of your program; Everything starts here.
 ####################################################################
 
 _start:
+	li $t0, 0x00000000
+	mtc1 $t0, $f0
+	mtc1 $t0, $f1
+	mtc1 $t0, $f2
+	mtc1 $t0, $f3
+	mtc1 $t0, $f4
+	mtc1 $t0, $f5
+	mtc1 $t0, $f6
+	mtc1 $t0, $f7
+	mtc1 $t0, $f8
+	mtc1 $t0, $f9
+	mtc1 $t0, $f10
+	mtc1 $t0, $f11
+	mtc1 $t0, $f12
+	mtc1 $t0, $f13
+	mtc1 $t0, $f14
+	mtc1 $t0, $f15
+	mtc1 $t0, $f16
+	mtc1 $t0, $f17
+	mtc1 $t0, $f18
+	mtc1 $t0, $f19
+	mtc1 $t0, $f20
+	mtc1 $t0, $f21
+	mtc1 $t0, $f22
+	mtc1 $t0, $f23
+	mtc1 $t0, $f24
+	mtc1 $t0, $f25
+	mtc1 $t0, $f26
+	mtc1 $t0, $f27
+	mtc1 $t0, $f28
+	mtc1 $t0, $f29
+	mtc1 $t0, $f30
+	mtc1 $t0, $f31
+	
+	
+	li $t0, -1
+	li $t1, -1
+	li $t2, -1
+	li $t3, -1
+	li $t4, -1
+	li $t5, -1
+	li $t6, -1
+	li $t7, -1
+	li $t8, -1
+	li $t9, -1
+	li $s0, -1
+	li $s1, -1
+	li $s2, -1
+	li $s3, -1
+	li $s4, -1
+	li $s5, -1
+	li $s6, -1
+	li $s7, -1
+	
+	
 	li $v0, 1
 	# Ask the user for value
 	jal prompt_user

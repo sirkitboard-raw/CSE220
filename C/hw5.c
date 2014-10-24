@@ -10,13 +10,14 @@ int printResults(int original, int scrambled);
 
 /* Ask the user for their SBUID*/
 int promptForId(void) {
-	int id, valid;
+	int id=0;
+	int valid=0;
 	char line[256];
 	/* Loop until valid input is given*/
 	do {
 		printf("Please enter your SBUID: ");
 		/* Read in the whole line*/
-		
+
 		fgets(line, sizeof(line), stdin);
 		/* If we were not able to parse the string, tell the user*/
 		if(!(valid = sscanf(line, "%d", &id))) {
@@ -28,7 +29,10 @@ int promptForId(void) {
 
 /* Scramble the SBUID*/
 int scrambleId(int id) {
-	int scrambled, i,r,rounds;
+	int scrambled=0;
+	int i=0;
+	int r=0;
+	int rounds=0;
 	scrambled = id;
 	srand(id);
 	r = rand();
@@ -36,8 +40,9 @@ int scrambleId(int id) {
 	rounds = (rand() % 10) + 1;
 	printf("Performing %d rounds of shifting and xoring.\n", rounds);
 	/* Go through some crazy shifting operations*/
-	for(i = 0; i < rounds; i++);
+	for(i = 0; i < rounds; i++){
 		scrambled = shift(scrambled, r >>= 1);
+	}
 	return scrambled;
 }
 
@@ -50,8 +55,8 @@ int xor(int v, int id) {
 
 /* Shift the value right and xor*/
 int shift(int v, int r) {
-	int result,shamt = 0x08000000;
-	result=0;
+	int result=0;
+	int shamt = 0x08000000;
 	while(shamt) {
 		result += xor(v, r); /* add the return value of xor to result*/
 		shamt = shamt >> 1; /* Shift right by 1 */
@@ -61,12 +66,13 @@ int shift(int v, int r) {
 
 int printResults(int original, int scrambled) {
 	/* If the scrambled number is even*/
-	int isEven;
+	int isEven=0;
 	printf("%d -> %d\n", original, scrambled);
-	isEven = scrambled % 2; 
-	if(isEven == 0)
+	isEven = scrambled % 2;
+	if(isEven == 0){
 		printf("The scrambled result is even!\n");
 		return 0;
+	}
 	/* else it is odd*/
 	printf("The scrambled result is odd!\n");
 	return 127;
@@ -74,7 +80,9 @@ int printResults(int original, int scrambled) {
 
 /* The program starts here*/
 int main() {
-	int id,scrambled,result;
+	int id=0;
+	int scrambled=0;
+	int result=0;
 	id = promptForId();
 	printf("SBUID: %d\n", id);
 	/* Scramble the SBUID*/
