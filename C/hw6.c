@@ -1,4 +1,9 @@
-#include<stdio.h>
+/*
+ * Homework 6
+ * Name Aditya Balwani
+ * SUBID : 109353920
+ */
+#include <stdio.h>
 #define HELP "\t-h\tDisplays this help menu\n\t-i\tDisplays statistics about instructions type usages.\n\t-m\tDisplays all the immediate values used in I-Type and J-Type instructions\n\t-r\tDisplays information about the registers\n\t-u\tDisplays human readable headers for different information displayed.\n\t\tShould only be used with the -i, -r, and -m flags."
 #define ERROR_SUCCESS 0
 #define ERROR_FLAGS 4
