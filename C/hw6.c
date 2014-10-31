@@ -15,7 +15,7 @@ void printHelp() {
   printf("%s\n",HELP);
 }
 
-void displayStatistics() {
+int displayStatistics() {
   int i=0, j=0, r=0, sum=0;
   int readHex,opcode;
   float avgi, avgj, avgr;
@@ -36,24 +36,25 @@ void displayStatistics() {
   avgj=((float)j/sum)*100;
   avgr=((float)r/sum)*100;
   printf("R-Type\t%d\t%.2f%%\nJ-Type\t%d\t%.2f%%\nI-Type\t%d\t%.2f%%\n",r,avgr,j,avgj,i,avgi);
+  return ERROR_SUCCESS;
 }
 
-void displayAll() {
-
+int displayAll() {
+  return ERROR_SUCCESS;
 }
 
-void displayRegisters() {
-
+int displayRegisters() {
+  return ERROR_SUCCESS;
 }
 
 int main(int argc, char *argv[]) {
-  int iflag=0,hflag=0,uflag=0,rflag=0,mflag=0;
+  int iflag=0,hflag=0,uflag=0,rflag=0,mflag=0,ret;
   char c;
   if(argc == 1) {
     printHelp();
     return ERROR_FLAGS;
   }
-  while((c= getopt(argc,argv,"himru:")) != -1) {
+  while((c= getopt(argc,argv,"abcdefghijklmnopqrtstuvwxyz:")) != -1) {
     switch(c) {
       case 'h':
         hflag=1;break;
@@ -70,20 +71,40 @@ int main(int argc, char *argv[]) {
         return ERROR_FLAGS;
     }
   }
-  if(argc==2) {
-    if(hflag){
-      printHelp();
-      return ERROR_SUCCESS;
-    }
-    else if(iflag) {
-      displayStatistics();
-      return ERROR_SUCCESS;
-    }
-    else if(mflag) {
-      displayAll();
-    }
-    else if(rflag) {
-      displayRegisters();
-    }
+  if(hflag){
+    printHelp();
+    return ERROR_SUCCESS;
+  }
+
+  if(iflag && !mflag && !rflag && !uflag) {
+    ret = displayStatistics();
+    return ret;
+  }
+  else if(!iflag && mflag && !rflag && !uflag) {
+    ret = displayAll();
+    return ret;
+  }
+  else if(!iflag && !mflag && rflag && !uflag) {
+    ret = displayRegisters();
+    return ret;
+  }
+
+  else if(iflag && !mflag && !rflag && uflag) {
+    printf("%6s%7s%9s\n","TYPE","COUNT","PERCENT");
+    ret = displayStatistics();
+    return ret;
+  }
+  else if(!iflag && mflag && !rflag && uflag) {
+    printf("HELP\n");
+    ret = displayAll();
+    return ret;
+  }
+  else if(!iflag && !mflag && rflag && uflag) {
+    printf("HELP\n");
+    ret = displayRegisters();
+    return ret;
+  }
+  else {
+    return ERROR_FLAGS;
   }
 }
