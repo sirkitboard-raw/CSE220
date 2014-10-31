@@ -4,6 +4,8 @@
  * SUBID : 109353920
  */
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #define HELP "\t-h\tDisplays this help menu\n\t-i\tDisplays statistics about instructions type usages.\n\t-m\tDisplays all the immediate values used in I-Type and J-Type instructions\n\t-r\tDisplays information about the registers\n\t-u\tDisplays human readable headers for different information displayed.\n\t\tShould only be used with the -i, -r, and -m flags."
 #define ERROR_SUCCESS 0
 #define ERROR_REG 1
@@ -16,10 +18,25 @@ void printHelp() {
 }
 
 int displayStatistics() {
-  int i=0, j=0, r=0, sum=0;
+  int i=0, j=0, r=0, sum=0,ctr,flag=0;
   int readHex,opcode;
   float avgi, avgj, avgr;
-  while(scanf("%x\n",&readHex) == 1) {
+  char buff[30];
+  for(ctr=0;ctr<30;ctr++) {
+    buff[ctr] = '\0';
+  }
+  fgets(buff,sizeof(buff),stdin);
+  while(sscanf(buff,"%[x0123456789abcdefABCDEF]",buff) == 1) {
+    for(ctr=0;ctr<30;ctr++) {
+      if(buff[ctr]=='\n') {
+        buff[ctr]='\0';
+      }
+    }
+    if(strlen(buff) !=10) {
+      return ERROR_INSTR;
+    }
+    flag=1;
+    sscanf(buff,"%x",&readHex);
     opcode = readHex >> 26;
     if(opcode == 0) {
       r++;
@@ -30,24 +47,102 @@ int displayStatistics() {
     else{
       i++;
     }
+    for(ctr=0;ctr<30;ctr++) {
+      buff[ctr] = '\0';
+    }
+    fgets(buff,sizeof(buff),stdin);
   }
-  sum = i+j+r;
-  avgi=((float)i/sum)*100;
-  avgj=((float)j/sum)*100;
-  avgr=((float)r/sum)*100;
-  printf("R-Type\t%d\t%.2f%%\nJ-Type\t%d\t%.2f%%\nI-Type\t%d\t%.2f%%\n",r,avgr,j,avgj,i,avgi);
-  return ERROR_SUCCESS;
-}
-
-int displayAll() {
+  if(flag) {
+    sum = i+j+r;
+    avgi=((float)i/sum)*100;
+    avgj=((float)j/sum)*100;
+    avgr=((float)r/sum)*100;
+    printf("R-Type\t%d\t%.2f%%\nJ-Type\t%d\t%.2f%%\nI-Type\t%d\t%.2f%%\n",r,avgr,j,avgj,i,avgi);
+  }
   return ERROR_SUCCESS;
 }
 
 int displayRegisters() {
+  int readHex,opcode, reg, i,sum2, sum=0,ctr,flag=0;
+  int idata[32], rdata[32];
+  float avg;
+  char buff[30];
+  for(i=0;i<32;i++) {
+    idata[i] = 0;
+    rdata[i] = 0;
+  }
+  for(ctr=0;ctr<30;ctr++) {
+    buff[ctr] = '\0';
+  }
+  fgets(buff,sizeof(buff),stdin);
+  while(sscanf(buff,"%x\n",&readHex) == 1) {
+    if(strlen(buff) !=11) {
+      return ERROR_INSTR;
+    }
+    flag = 1;
+    opcode = readHex >> 26;
+    if(opcode == 0) {
+      reg = readHex >> 21;
+      reg = reg & 0x0000001F;
+      rdata[reg]++;
+      sum++;
+      reg = readHex >> 16;
+      reg = reg & 0x0000001F;
+      rdata[reg]++;
+      sum++;
+      reg = readHex >> 11;
+      reg = reg & 0x0000001F;
+      rdata[reg]++;
+      sum++;
+    }
+    else if (opcode== 2 || opcode == 3) {
+
+    }
+    else{
+      reg = readHex >> 21;
+      reg = reg & 0x0000001F;
+      idata[reg]++;
+      sum++;
+      reg = readHex >> 16;
+      reg = reg & 0x0000001F;
+      idata[reg]++;
+      sum++;
+    }
+    for(ctr=0;ctr<30;ctr++) {
+      buff[ctr] = '\0';
+    }
+    fgets(buff,sizeof(buff),stdin);
+  }
+  if(flag){
+    for(i = 0;i<32;i++){
+      sum2 = idata[i]+rdata[i];
+      avg = 100 * ((float)(sum2))/sum;
+      printf("$%-2d%6d%8d%8d%8d%9.2f\n",i,sum2, rdata[i],idata[i],0, avg);
+    }
+  }
   return ERROR_SUCCESS;
 }
 
-int main(int argc, char *argv[]) {
+int displayAll() {
+  int readHex,opcode, addr;
+  while(scanf("%x\n",&readHex) == 1) {
+    opcode = readHex >> 26;
+    if(opcode == 0) {
+
+    }
+    else if (opcode== 2 || opcode == 3) {
+      addr = readHex & 0x03FFFFFF;
+      printf("0x%x\n",addr);
+    }
+    else{
+      addr = readHex & 0x0000FFFF;
+      printf("0x%x\n",addr);
+    }
+  }
+  return ERROR_SUCCESS;
+}
+
+int main(int argc, char *argv[]) {;
   int iflag=0,hflag=0,uflag=0,rflag=0,mflag=0,ret;
   char c;
   if(argc == 1) {
@@ -95,12 +190,12 @@ int main(int argc, char *argv[]) {
     return ret;
   }
   else if(!iflag && mflag && !rflag && uflag) {
-    printf("HELP\n");
+    printf("IMMEDIATE-VALUE\n");
     ret = displayAll();
     return ret;
   }
   else if(!iflag && !mflag && rflag && uflag) {
-    printf("HELP\n");
+    printf("REG%5s%8s%8s%8s%11s\n","USE","R-TYPE","I-TYPE", "J-TYPE", "PERCENT");
     ret = displayRegisters();
     return ret;
   }
