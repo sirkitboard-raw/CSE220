@@ -131,20 +131,41 @@ int displayRegisters() {
 }
 
 int displayAll() {
-  int readHex,opcode, addr;
-  while(scanf("%x\n",&readHex) == 1) {
-    opcode = readHex >> 26;
-    if(opcode == 0) {
+  int readHex,opcode, addr, ctr=0, flag=0;
+  char buff[30];
+  for(ctr=0;ctr<30;ctr++) {
+    buff[ctr] = '\0';
+  }
+  fgets(buff,sizeof(buff),stdin);
+  while(sscanf(buff,"%[x0123456789abcdefABCDEF]",buff) == 1) {
+    for(ctr=0;ctr<30;ctr++) {
+      if(buff[ctr]=='\n') {
+        buff[ctr]='\0';
+      }
+    }
+    if(strlen(buff) !=10) {
+      return ERROR_INSTR;
+    }
+    if(sscanf(buff,"%x",&readHex) == 1 ) {
+      flag = 1;
+      opcode = readHex >> 26;
+      if(opcode == 0) {
 
+      }
+      else if (opcode== 2 || opcode == 3) {
+        addr = readHex & 0x03FFFFFF;
+        printf("0x%x\n",addr);
+      }
+      else{
+        addr = readHex & 0x0000FFFF;
+        printf("0x%x\n",addr);
+      }
+      for(ctr=0;ctr<30;ctr++) {
+        buff[ctr] = '\0';
+      }
     }
-    else if (opcode== 2 || opcode == 3) {
-      addr = readHex & 0x03FFFFFF;
-      printf("0x%x\n",addr);
-    }
-    else{
-      addr = readHex & 0x0000FFFF;
-      printf("0x%x\n",addr);
-    }
+    fgets(buff,sizeof(buff),stdin);
+
   }
   return ERROR_SUCCESS;
 }
