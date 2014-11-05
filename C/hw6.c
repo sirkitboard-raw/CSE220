@@ -59,6 +59,9 @@ int displayStatistics() {
     avgr=((float)r/sum)*100;
     printf("R-Type\t%d\t%.2f%%\nJ-Type\t%d\t%.2f%%\nI-Type\t%d\t%.2f%%\n",r,avgr,j,avgj,i,avgi);
   }
+  else {
+    return ERROR_INSTR;
+  }
   return ERROR_SUCCESS;
 }
 
@@ -82,7 +85,7 @@ int displayRegisters() {
       }
     }
     if(strlen(buff) !=10) {
-      return ERROR_INSTR;
+      return ERROR_REG;
     }
     if(sscanf(buff,"%x",&readHex) == 1 ) {
       flag = 1;
@@ -127,11 +130,14 @@ int displayRegisters() {
       printf("$%-2d%6d%8d%8d%8d%9.2f\n",i,sum2, rdata[i],idata[i],0, avg);
     }
   }
+  else {
+    return ERROR_REG;
+  }
   return ERROR_SUCCESS;
 }
 
 int displayAll() {
-  int readHex,opcode, addr, ctr=0, flag=0;
+  int readHex,opcode, addr, ctr=0,flag = 0;
   char buff[30];
   for(ctr=0;ctr<30;ctr++) {
     buff[ctr] = '\0';
@@ -144,11 +150,11 @@ int displayAll() {
       }
     }
     if(strlen(buff) !=10) {
-      return ERROR_INSTR;
+      return ERROR_IMMEDIATE;
     }
     if(sscanf(buff,"%x",&readHex) == 1 ) {
-      flag = 1;
       opcode = readHex >> 26;
+      flag=1;
       if(opcode == 0) {
 
       }
@@ -165,7 +171,9 @@ int displayAll() {
       }
     }
     fgets(buff,sizeof(buff),stdin);
-
+  }
+  if (flag==0) {
+    return ERROR_IMMEDIATE;
   }
   return ERROR_SUCCESS;
 }
