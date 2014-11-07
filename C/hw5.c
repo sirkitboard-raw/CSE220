@@ -26,6 +26,8 @@ int promptForId(void) {
 			printf("Invalid id entered.\n");
 		}
 	} while(!valid);
+
+	
 	return id;
 }
 
