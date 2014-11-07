@@ -18,7 +18,73 @@ void printHelp() {
   printf("%s",HELP);
 }
 
+void createTabula() {
+  char** t = tabula;
+  char* tr;
+}
+
+int encryptCaeser(int shift, FILE *fp, FILE *fc) {
+  char c;
+  int temp;
+  while(!feof(fp)) {
+    c = fgetc(fp);
+    if(feof(fp)) {
+      return EXIT_SUCCESS;
+    }
+    temp = (char)c;
+    if((temp>=65 && temp<91) || (temp>=97 && temp<123)) {
+      if(temp>=97) {
+        c = (char)((int)(c) - 32);
+        temp = (int)(c);
+      }
+      temp-=65;
+      temp+=shift;
+      temp%=26;
+      temp+=65;
+      c = (char)(temp);
+      fputc((int)(c),fc);
+    }
+    else {
+      fputc((int)(c), fc);
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
+int decryptCaeser(int shift, FILE *fr, FILE *fw) {
+  char c;
+  int temp;
+  while(!feof(fr)) {
+    c = fgetc(fr);
+    if(feof(fr)) {
+      return EXIT_SUCCESS;
+    }
+    temp = (char)(c);
+    if((temp>=65 && temp<91) || (temp>=97 && temp<123)) {
+      if(temp>=97) {
+        c = (char)((int)(c) - 32);
+        temp = (int)(c);
+      }
+      temp-=65;
+      temp+=26-shift;
+      temp%=26;
+      temp+=65;
+      fputc(temp,fw);
+    }
+    else {
+      fputc((int)(c),fw);
+    }
+  }
+  return EXIT_SUCCESS;
+}
+
 int main(int argc, char* argv[]) {
-  debug("HELLO!");
+  debug("Shift amount 7");
+  printf("%s\n",alphabet);
+  FILE *fr = fopen("new.txt","r");
+  FILE *fw = fopen("plain.txt","w");
+  decryptCaeser(3,fr,fw);
+  fclose(fr);
+  fclose(fw);
   return EXIT_SUCCESS;
 }
