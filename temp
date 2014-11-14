@@ -1,0 +1,33 @@
+while((c=fgetc(fr))!=EOF) {
+  if((temp>=65 && temp<91) || (temp>=97 && temp<123)) {
+    if(temp>=97) {
+      c-=32;
+    }
+    if(keyflag) {
+      plain = plaintext+(sizeof(char)*charctr);
+      k = key + (sizeof(char)*charctr);
+      *plain = c;
+      temp = (*key+shift-65)%ALPHABET_SIZE;
+      tab = *tabula + (sizeof(char)*ALPHABET_SIZE*temp);
+      c = (c+shift-65)%ALPHABET_SIZE;
+      tab+= sizeof(char)*c;
+      fputc((int)(*tab),fw);
+      charctr++;
+      if(charctr>=strlen(key)) {
+        keyflag=0;
+      }
+    }
+    else {
+      charctr%=BUFFER_SIZE;
+      charctr2%=BUFFER_SIZE;
+      plain = plaintext+sizeof(char)*charctr2;
+      temp = (*key+shift-65)%ALPHABET_SIZE;
+      plain = plaintext+sizeof(char)*charctr;
+      *plain = c;
+      c = (c+shift-65)%ALPHABET_SIZE;
+      tab = *tabula + (sizeof(char)*ALPHABET_SIZE*temp);
+      tab+= sizeof(char)*c;
+      fputc((int)(*tab),fw);
+    }
+  }
+}

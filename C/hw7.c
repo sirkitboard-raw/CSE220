@@ -5,11 +5,12 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<unistd.h>
 #include "hw7.h"
 #define HELP "usage: ./a.out [-s | -a | -h]\n\t-s\tSubstitution cipher\n\t\tAdditional parameters: [-e | -d] n INPUT_FILE OUTPUT_FILE\n\t\t-e\tEncrypt using the substitution cipher.\n\t\t-d\tDecrypt using the substitution cipher.\n\t\tn\tThe amount of position to shift by.\n\t\tINPUT_FILE This can be any file on the file system or - which specifies stdin.\n\t\tOUTPUT_FILE\tThis can be any file on the system or - which specifies stdout.\n\n\t-a\tAutokey cipher\t\tAdditional parameters: [-e | -d] n INPUT_FILE KEY_FILE OUTPUT_FILE\n\t\t-e\t\tEncrypt using the autokey cipher\n\t\t-d\t\tDecrypt using the autokey cipher\n\t\tn\t\tThe initial shift value\n\t\tINPUT_FILE\tThis can be any file on the file system or - which specifies stdin.\n\t\tKEY_FILE\tThis can be any file on the file system or - which specifies stdin.\n\t\tOUTPUT_FILE\tThis can be any file on the system or - which specifies stdout.\n\t-h\tDisplays this help menu\n"
 
 #ifdef CSE220
-  #define cse220(fmt, ...) printf("DEBUG:%s:%s:%d " fmt "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+  #define cse220(fmt, ...) printf("CSE220:" fmt "\n", ##__VA_ARGS__);
 #else
   #define cse220(fmt,...)
 #endif
@@ -40,8 +41,10 @@ void createTabula(int shift) {
 int encryptCaeser(int shift, FILE *fp, FILE *fc) {
   char c;
   int temp;
+  debug("encrypt started");
   while((c=fgetc(fp))!=EOF) {
     temp = (char)c;
+    debug("step");
     if((temp>=65 && temp<91) || (temp>=97 && temp<123)) {
       if(temp>=97) {
         c = (char)((int)(c) - 32);
@@ -58,6 +61,7 @@ int encryptCaeser(int shift, FILE *fp, FILE *fc) {
       fputc((int)(c), fc);
     }
   }
+  debug("encrupt ended");
   return EXIT_SUCCESS;
 }
 
@@ -65,6 +69,7 @@ int decryptCaeser(int shift, FILE *fr, FILE *fw) {
   char c;
   int temp;
   while((c=fgetc(fr))!=EOF) {
+    debug("%c",c);
     temp = (char)c;
     temp = (char)(c);
     if((temp>=65 && temp<91) || (temp>=97 && temp<123)) {
@@ -159,7 +164,6 @@ int decryptAuto(int shift, FILE *fr, FILE *fk, FILE *fw) {
   char*k;
   int charctr=0, keyflag=1,charctr2 = 0, ctr=0;
   char *plain = plaintext;
-  char *cip = ciphertext;
   char *tab = *tabula;
   k = key;
 
@@ -181,7 +185,7 @@ int decryptAuto(int shift, FILE *fr, FILE *fk, FILE *fw) {
       }
       if(keyflag) {
         k = key + (sizeof(char)*charctr);
-        temp = ( *k +shift-65)%ALPHABET_SIZE;
+        temp = ( *k-shift-65+ALPHABET_SIZE)%ALPHABET_SIZE;
         tab = *tabula + (sizeof(char)*ALPHABET_SIZE*temp);
         found = 0;
         ctr = 0;
@@ -208,7 +212,7 @@ int decryptAuto(int shift, FILE *fr, FILE *fk, FILE *fw) {
         charctr%=BUFFER_SIZE;
         charctr2%=BUFFER_SIZE;
         plain = plaintext + (sizeof(char)*charctr2);
-        temp = ( *plain +shift-65)%ALPHABET_SIZE;
+        temp = ( *plain -shift-65+ALPHABET_SIZE)%ALPHABET_SIZE;
         tab = *tabula + (sizeof(char)*ALPHABET_SIZE*temp);
         found = 0;
         ctr = 0;
@@ -239,10 +243,152 @@ int decryptAuto(int shift, FILE *fr, FILE *fk, FILE *fw) {
 }
 
 int main(int argc, char* argv[]) {
-  createTabula(0);
-  FILE *fr = fopen("new.txt","r");
-  FILE *fw = fopen("plain.txt","w");
-  FILE *fk = fopen("key.txt","r");
-  decryptAuto(0,fr,fk,fw);
+  int sflag=0,aflag=0,hflag=0,eflag=0,dflag=0,shift,ret,inflag = 0;
+  char **argptr = argv;
+  char *ptr;
+  char c;
+  FILE* fr,*fw,*fk;
+  while((c= getopt(argc,argv,"sahed")) != -1) {
+    switch(c) {
+      case 's':
+        sflag=1;break;
+      case 'a':
+        aflag=1;break;
+      case 'h':
+        hflag=1;break;
+      case 'e':
+        eflag=1;break;
+      case 'd':
+        dflag=1;break;
+      case '3':
+      default:
+        printHelp();
+        return EXIT_FAILURE;
+    }
+  }
+
+  if(hflag) {
+    printHelp();
+  }
+  if(sflag && !aflag){
+    if(argc - optind != 3) {
+      return EXIT_FAILURE;
+    }
+    ptr= *(argv + optind);
+    if((sscanf(ptr, "%d",&shift)!=1)) {
+      return EXIT_FAILURE;
+    }
+    cse220("shift amount: %d",shift);
+    ptr= *(argptr+optind+1);
+    if(!strcmp(ptr,"-")) {
+      fr = stdin;
+    }
+    else {
+      fr = fopen(ptr,"r");
+      if(fr==0) {
+        return EXIT_FAILURE;
+      }
+    }
+    cse220("input file: %s", ptr);
+    ptr= *(argptr +optind+2);
+    if(!strcmp(ptr,"-")) {
+      fw = stdout;
+    }
+    else {
+      fw = fopen(ptr,"w");
+      if(fw==0) {
+        return EXIT_FAILURE;
+      }
+    }
+    cse220("output file: %s", ptr);
+    cse220("cipher type : substitution cipher");
+    if(eflag &&! dflag) {
+      cse220("cipher operation: encryption");
+      ret = encryptCaeser(shift, fr,fw);
+      fclose(fr);
+      fclose(fw);
+      return ret;
+    }
+    else if (dflag && !eflag) {
+      cse220("cipher operation: decryption");
+      ret = decryptCaeser(shift, fr, fw);
+      fclose(fr);
+      fclose(fw);
+      return ret;
+    }
+    else return EXIT_FAILURE;
+  }
+  else if(!sflag && aflag){
+    if(argc - optind != 4) {
+      return EXIT_FAILURE;
+    }
+    ptr= *(argv + optind);
+    if((sscanf(ptr, "%d",&shift)!=1)) {
+      return EXIT_FAILURE;
+    }
+    cse220("shift amount: %d",shift);
+    ptr= *(argptr+optind+1);
+    if(!strcmp(ptr,"-")) {
+      fr = stdin;
+      inflag = 1;
+    }
+    else {
+      fr = fopen(ptr,"r");
+      if(fr==0) {
+
+        return EXIT_FAILURE;
+      }
+    }
+    cse220("input file: %s", ptr);
+    ptr= *(argptr +optind+2);
+    if(!strcmp(ptr,"-")) {
+      if(!inflag) {
+        fk = stdin;
+      }
+      else {
+        return EXIT_FAILURE;
+      }
+    }
+    else {
+      fk = fopen(ptr,"r");
+      if(fk==0) {
+        return EXIT_FAILURE;
+      }
+    }
+    cse220("key file: %s", ptr);
+
+    ptr= *(argptr+optind+3);
+    if(!strcmp(ptr,"-")) {
+      fw = stdout;
+    }
+    else {
+      fw = fopen(ptr,"w");
+      if(fw==0) {
+        return EXIT_FAILURE;
+      }
+    }
+    cse220("output file: %s", ptr);
+    cse220("cipher function : Autokey");
+
+    if(eflag &&! dflag) {
+      cse220("cipher mode : encrypt");
+
+      createTabula(shift);
+      ret = encryptAuto(shift, fr,fk,fw);
+      fclose(fr);
+      fclose(fw);
+      return ret;
+    }
+    else if (dflag && !eflag) {
+      cse220("cipher mode : decrypt");
+      createTabula(shift);
+      ret = decryptAuto(shift, fr, fk,fw);
+      fclose(fr);
+      fclose(fw);
+      fclose(fk);
+      return ret;
+    }
+    else return EXIT_FAILURE;
+  }
   return EXIT_SUCCESS;
 }
