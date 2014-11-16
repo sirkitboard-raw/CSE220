@@ -202,7 +202,6 @@ char** hw_split(const char *str, char c){
         parts++;
     }
   }
-  printf("%s",temp);
   splitted = malloc((parts+1)*sizeof(char*));
   if(parts==1) {
     *splitted = temp;
@@ -307,7 +306,7 @@ void hw_swapTokens(char *str, size_t i, size_t j, const char *delimiters){
   *(tokens+j) = temp2;
   m=0;
   while(*(tokens+m)!=NULL) {
-    printf("Token %d : %s\n",m,*(tokens+m));
+    /*printf("Token %d : %s\n",m,*(tokens+m));*/
     m++;
   }
   temp = malloc(l1);
@@ -337,7 +336,7 @@ void hw_swapTokens(char *str, size_t i, size_t j, const char *delimiters){
       }
     }
 
-  printf("\nS: %s\n",str);
+  /*printf("\nS: %s\n",str);*/
 }
 
 /**
