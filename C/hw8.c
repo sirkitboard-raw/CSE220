@@ -311,30 +311,29 @@ void hw_swapTokens(char *str, size_t i, size_t j, const char *delimiters){
   }
   temp = malloc(l1);
   hw_strncpy(temp,str,l1);
-
-    k=0;l=0;m=0;
-    while(k<l1) {
-      if(hw_indexof(delimiters,*(temp+l))!=-1) {
-        *(str+k) = *(temp+l);
-        k++;l++;
+  k=0;l=0;m=0;
+  while(k<l1) {
+    if(hw_indexof(delimiters,*(temp+l))!=-1) {
+      *(str+k) = *(temp+l);
+      k++;l++;
+    }
+    else {
+      for(n=0;n<hw_strlen(*(tokens+m));n++) {
+        *(str+k) = *(*(tokens+m)+n);
+        k++;
+      }
+      if(m==i){
+        l+=iLength;
+      }
+      else if (m==j) {
+        l+=jLength;
       }
       else {
-        for(n=0;n<hw_strlen(*(tokens+m));n++) {
-          *(str+k) = *(*(tokens+m)+n);
-          k++;
-        }
-        if(m==i){
-          l+=iLength;
-        }
-        else if (m==j) {
-          l+=jLength;
-        }
-        else {
-          l+=hw_strlen(*(tokens+m));
-        }
-        m++;
+        l+=hw_strlen(*(tokens+m));
       }
+      m++;
     }
+  }
 
   /*printf("\nS: %s\n",str);*/
 }
