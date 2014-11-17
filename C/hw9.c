@@ -33,11 +33,23 @@ InstrType* initInstrTypeList(InstrType *head) {
   return head;
 }
 
+void printNode(Instr *cursor) {
+  if(cursor==NULL)
+    return;
+  else {
+    printf("%p uid: %d, pretty: %d, mnemonic: %s, next: %p, prev: %p\n",cursor,cursor->uid,cursor->pretty, cursor->mnemonic,cursor->next,cursor->prev);
+    cursor = cursor->next;
+    printNode(cursor);
+    return;
+  }
+}
+
 void printList(InstrType *cursor) {
   if(cursor==NULL)
     return;
   else {
-    printf("%c-Type Count: %lo, List: \n",cursor->type, cursor->count);
+    printf("%c-Type Count: %lu, List : \n",cursor->type, cursor->count);
+    printNode(cursor->head);
     cursor = cursor->next;
     printList(cursor);
     return;
@@ -90,34 +102,41 @@ Instr* addInstrToList(Instr *head, uint32_t uid, char* name, uint32_t pretty) {
     cursor->next->pretty=pretty;
     cursor->next->prev=cursor;
     cursor->next->next=NULL;
-    return cursor;
+    return head;
   }
 }
 
 void addInstr(InstrType *head, char type, uint32_t uid, char* name, uint32_t pretty) {
   Instr* cursor;
-  if(type=='R') {
+  if(type=='r') {
     cursor = head->head;
     head->head = addInstrToList(cursor,uid,name,pretty);
+    head->count++;
   }
-  if(type=='I') {
+  else if(type=='i') {
     cursor = head->next->head;
-    head->head = addInstrToList(cursor,uid,name,pretty);
+    head->next->head = addInstrToList(cursor,uid,name,pretty);
+    head->next->count++;
   }
-  if(type=='J') {
+  else if(type=='j') {
     cursor = head->next->next->head;
-    head->head = addInstrToList(cursor,uid,name,pretty);
+    head->next->next->head = addInstrToList(cursor,uid,name,pretty);
+    head->next->next->count++;
   }
 }
 
 void initInstrList(InstrType *head) {
   char BUFFER[256];
   char type;
+  char *mnemo;
   uint32_t pretty, uid;
   FILE *fi = fopen("instruction_mapping.txt","r");
   while(!feof(fi)) {
     if(fscanf(fi,"%c %x %s %u\n",&type, &uid, BUFFER, &pretty) ==4){
-      addInstr(head,type, uid, BUFFER, pretty);
+      mnemo = malloc(strlen(BUFFER));
+      strcpy(mnemo,BUFFER);
+      addInstr(head,type, uid, mnemo, pretty);
+      printf("%c %x %s %u\n",type, uid, BUFFER, pretty);
     }
   }
 }
