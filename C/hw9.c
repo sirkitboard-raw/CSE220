@@ -180,39 +180,44 @@ void initInstrList(InstrType *head) {
   }
 }
 
-//
-// int reverse(int i) {
-//   int ret=0,j;
-//   char buffer[4];
-//   buffer[0] = (i >> 24) & 0x000000FF;
-//   buffer[1] = (i >> 16) & 0x000000FF;
-//   buffer[2] = (i >> 8) & 0x000000FF;
-//   buffer[3] = i & 0x000000FF;
-//   ret = 0x00000000;
-//   for(j=3;j>=0;j--) {
-//     ret = ret<<8;
-//     ret+=buffer[j];
-//     printf("%x ",ret);
-//   }
-//   printf("\n");
-//   return ret;
-// }
-
 
 int reverse(int i) {
-  int ret=0;
-  char buffer[4];
+  int ret=0,j;
+  int buffer[4];
   buffer[0] = (i >> 24) & 0x000000FF;
   buffer[1] = (i >> 16) & 0x000000FF;
   buffer[2] = (i >> 8) & 0x000000FF;
   buffer[3] = i & 0x000000FF;
-  buffer[3] = buffer[3]<<24 & 0xFF000000;
-  buffer[2] = buffer[2]<<16 & 0x00FF0000;
-  buffer[1] = buffer[1]<<8 & 0x0000FF00;
-  buffer[0] = buffer[0] & 0x000000FF;
-  ret = buffer[0] +buffer[1] +buffer[2] +buffer[3];
+  ret = 0x00000000;
+  for(j=3;j>=0;j--) {
+    ret = ret<<8;
+    ret+=buffer[j];
+    printf("%x ",ret);
+  }
+  printf("\n");
   return ret;
 }
+
+
+// int reverse(int i) {
+//   int ret=0,j;
+//   int buffer[4];
+//   buffer[0] = (i >> 24) & 0xFF;
+//   buffer[1] = (i >> 8) & 0xFF00;
+//   buffer[2] = (i << 8) & 0xFF0000;
+//   buffer[3] = (i << 24) & 0xFF000000;
+//   ret =buffer[0]+buffer[1]+buffer[2]+buffer[3];
+//   printf("\n");
+//   return ret;
+// }
+
+// int reverse(int num) {
+//   int swapped = ((num>>24)&0xff) | // move byte 3 to byte 0
+//                     ((num<<8)&0xff0000) | // move byte 1 to byte 2
+//                     ((num>>8)&0xff00) | // move byte 2 to byte 1
+//                     ((num<<24)&0xff000000); // byte 0 to byte 3
+//   return swapped;
+// }
 
 Instr* findNode(int uid, Instr*cursor) {
   if(cursor == NULL) {
