@@ -180,25 +180,37 @@ void initInstrList(InstrType *head) {
   }
 }
 
+//
+// int reverse(int i) {
+//   int ret=0,j;
+//   char buffer[4];
+//   buffer[0] = (i >> 24) & 0x000000FF;
+//   buffer[1] = (i >> 16) & 0x000000FF;
+//   buffer[2] = (i >> 8) & 0x000000FF;
+//   buffer[3] = i & 0x000000FF;
+//   ret = 0x00000000;
+//   for(j=3;j>=0;j--) {
+//     ret = ret<<8;
+//     ret+=buffer[j];
+//     printf("%x ",ret);
+//   }
+//   printf("\n");
+//   return ret;
+// }
+
 
 int reverse(int i) {
-  int ret=0,j;
+  int ret=0;
   char buffer[4];
   buffer[0] = (i >> 24) & 0x000000FF;
   buffer[1] = (i >> 16) & 0x000000FF;
   buffer[2] = (i >> 8) & 0x000000FF;
   buffer[3] = i & 0x000000FF;
-  ret = 0x00000000;
-  buffer[0] &=0x000000FF;
-  buffer[1] &= 0x000000FF;
-  buffer[2] &= 0x000000FF;
-  buffer[3] &= 0x000000FF;
-  for(j=3;j>=0;j--) {
-    ret = ret<<8;
-    ret+=buffer[j];
-    printf("%x ",ret);
-  }
-  printf("\n");
+  buffer[3] = buffer[3]<<24 & 0xFF000000;
+  buffer[2] = buffer[2]<<16 & 0x00FF0000;
+  buffer[1] = buffer[1]<<8 & 0x0000FF00;
+  buffer[0] = buffer[0] & 0x000000FF;
+  ret = buffer[0] +buffer[1] +buffer[2] +buffer[3];
   return ret;
 }
 
