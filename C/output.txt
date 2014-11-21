@@ -1,0 +1,544 @@
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43f
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x457
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x474
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x491
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x49a
+addiu $v0, $zero, 0x4
+syscall
+addiu $v0, $zero, 0x5
+syscall
+addi $s0, $v0, 0x0
+addiu $t0, $zero, 0x1
+addiu $t1, $zero, 0x2
+addiu $t2, $zero, 0x3
+beq $v0, $t2, 0x1fa
+beq $v0, $t0, 0x0
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x36b
+addiu $v0, $zero, 0x4
+syscall
+addiu $v0, $zero, 0x8
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x200
+addiu $a1, $zero, 0x100
+addu $t9, $a0, $zero
+addu $t8, $a0, $zero
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x396
+addiu $v0, $zero, 0x4
+syscall
+addiu $v0, $zero, 0x8
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x0
+addiu $a1, $zero, 0x100
+addu $t7, $a0, $zero
+addu $t5, $a0, $zero
+syscall
+lb $t1, 0x0($t9)
+beq $t1, $zero, 0x2
+addi $t9, $t9, 0x1
+j 0x100032
+sb $zero, 0xffff($t9)
+lb $t2, 0x0($t7)
+beq $t2, $zero, 0x2
+addi $t7, $t7, 0x1
+j 0x100037
+sb $zero, 0xffff($t7)
+addiu $v0, $zero, 0xd
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x200
+addiu $a1, $zero, 0x0
+addiu $a2, $zero, 0x0
+syscall
+addu $s6, $v0, $zero
+bgtz $zero, 0x5
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x3bc
+addiu $v0, $zero, 0x4
+syscall
+j 0x100000
+addiu $s5, $zero, 0xef
+addiu $s7, $zero, 0xbb
+addiu $t7, $zero, 0xbf
+addu $a0, $s6, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x100
+addiu $a2, $zero, 0x3
+addiu $v0, $zero, 0xe
+syscall
+lui $at, $zero, 0x1001
+ori $s2, $at, 0x100
+lbu $s1, 0x0($s2)
+lbu $s3, 0x1($s2)
+lbu $s4, 0x2($s2)
+bne $s1, $s5, 0x3
+bne $s3, $s7, 0x2
+bne $s4, $t7, 0x1
+j 0x100061
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x3df
+addiu $v0, $zero, 0x4
+syscall
+j 0x1001e4
+addiu $s1, $zero, 0x1
+beq $s0, $s1, 0x25
+addiu $s1, $zero, 0x2
+beq $s0, $s1, 0x0
+addiu $v0, $zero, 0xd
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x0
+addiu $a1, $zero, 0x1
+addiu $a2, $zero, 0x0
+syscall
+addu $t0, $v0, $zero
+addiu $t3, $zero, 0xfe
+lui $at, $zero, 0x1001
+sb $t3, 0x0($at)
+lui $at, $zero, 0x1001
+ori $t9, $at, 0x0
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+addu $a1, $t9, $zero
+addiu $a2, $zero, 0x1
+syscall
+addiu $t3, $zero, 0xff
+lui $at, $zero, 0x1001
+sb $t3, 0x0($at)
+lui $at, $zero, 0x1001
+ori $t9, $at, 0x0
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+addu $a1, $t9, $zero
+addiu $a2, $zero, 0x1
+syscall
+addiu $t3, $zero, 0xd
+addiu $t6, $zero, 0x80
+addiu $t4, $zero, 0xe0
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x437
+addiu $v0, $zero, 0x4
+syscall
+j 0x1000a6
+addiu $v0, $zero, 0xd
+addi $a0, $t5, 0x0
+addiu $a1, $zero, 0x1
+addiu $a2, $zero, 0x0
+syscall
+addu $t0, $v0, $zero
+addiu $t3, $zero, 0xff
+lui $at, $zero, 0x1001
+sb $t3, 0x0($at)
+lui $at, $zero, 0x1001
+ori $t9, $at, 0x0
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+addu $a1, $t9, $zero
+addiu $a2, $zero, 0x1
+syscall
+addiu $t3, $zero, 0xfe
+lui $at, $zero, 0x1001
+sb $t3, 0x0($at)
+lui $at, $zero, 0x1001
+ori $t9, $at, 0x0
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+addu $a1, $t9, $zero
+addiu $a2, $zero, 0x1
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x437
+addiu $v0, $zero, 0x4
+syscall
+addiu $t3, $zero, 0xd
+addiu $t6, $zero, 0x80
+addiu $t4, $zero, 0xe0
+addiu $t9, $zero, 0xf0
+addiu $t1, $zero, 0xf8
+addiu $t7, $zero, 0xc0
+addiu $t5, $zero, 0xfff0
+addu $a0, $s6, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x100
+addiu $a2, $zero, 0x1
+addiu $v0, $zero, 0xe
+syscall
+beq $v0, $zero, 0x15d
+lui $at, $zero, 0x1001
+ori $s2, $at, 0x100
+lbu $a0, 0x0($s2)
+beq $a0, $t3, 0x159
+slt $at, $t1, $a0
+beq $at, $zero, 0x403d
+and $s3, $t5, $a0
+slt $at, $t6, $s3
+bne $at, $zero, 0x5
+beq $s3, $t9, 0x83
+beq $s3, $t4, 0x48
+slt $at, $t7, $s3
+beq $at, $zero, 0x1a
+j 0x1000a6
+addu $s4, $a0, $zero
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x417
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s4, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x439
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s4, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x437
+addiu $v0, $zero, 0x4
+syscall
+addu $s2, $s4, $zero
+j 0x100186
+addu $s4, $a0, $zero
+xor $t1, $t7, $s4
+addu $a0, $s6, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x100
+addiu $a2, $zero, 0x1
+addiu $v0, $zero, 0xe
+syscall
+lui $at, $zero, 0x1001
+ori $s2, $at, 0x100
+lbu $s1, 0x0($s2)
+xor $t9, $t6, $s1
+sll $t1, $zero, 0x6
+or $s2, $t9, $t1
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x41f
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s4, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s1, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x439
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s2, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x437
+addiu $v0, $zero, 0x4
+syscall
+j 0x100186
+addu $t5, $a0, $zero
+addu $a0, $s6, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x100
+addiu $a2, $zero, 0x2
+addiu $v0, $zero, 0xe
+syscall
+lui $at, $zero, 0x1001
+ori $s2, $at, 0x100
+lbu $s4, 0x0($s2)
+lbu $s3, 0x1($s2)
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x427
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $t5, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s4, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s3, 0x0
+addiu $v0, $zero, 0x22
+syscall
+addiu $s7, $zero, 0xf
+and $s1, $t5, $s7
+sll $s5, $zero, 0xc
+addiu $s7, $zero, 0x3f
+and $s1, $s4, $s7
+sll $s2, $zero, 0x6
+or $s1, $s2, $s5
+and $s5, $s3, $s7
+or $s3, $s1, $s5
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x439
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s3, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x437
+addiu $v0, $zero, 0x4
+syscall
+addu $s2, $s3, $zero
+j 0x100186
+addu $t5, $a0, $zero
+addu $a0, $s6, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x100
+addiu $a2, $zero, 0x3
+addiu $v0, $zero, 0xe
+syscall
+lui $at, $zero, 0x1001
+ori $s2, $at, 0x100
+lbu $s4, 0x0($s2)
+lbu $s3, 0x1($s2)
+lbu $t1, 0x2($s2)
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x42f
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $t5, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s4, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s3, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $t1, 0x0
+addiu $v0, $zero, 0x22
+syscall
+addiu $s7, $zero, 0xf
+and $s1, $t5, $s7
+sll $s5, $zero, 0x12
+addiu $s7, $zero, 0x3f
+and $s1, $s4, $s7
+sll $s2, $zero, 0xc
+or $s1, $s2, $s5
+and $s5, $s3, $s7
+sll $t7, $zero, 0x6
+or $s3, $s1, $t7
+and $s5, $t1, $s7
+or $s4, $s5, $s3
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x43c
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x439
+addiu $v0, $zero, 0x4
+syscall
+addi $a0, $s4, 0x0
+addiu $v0, $zero, 0x22
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x437
+addiu $v0, $zero, 0x4
+syscall
+addu $s2, $s4, $zero
+j 0x100186
+ori $t1, $zero, 0xffff
+slt $at, $s2, $t1
+bne $at, $zero, 0x1c
+addiu $t3, $zero, 0x1
+addiu $t4, $zero, 0x2
+beq $s0, $t3, 0xd
+beq $s0, $t4, 0x0
+lui $at, $zero, 0x1001
+sb $s2, 0x1($at)
+srl $s2, $zero, 0x8
+lui $at, $zero, 0x1001
+sb $s2, 0x0($at)
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x0
+addiu $a2, $zero, 0x2
+syscall
+j 0x1000a6
+lui $at, $zero, 0x1001
+sb $s2, 0x0($at)
+srl $s2, $zero, 0x8
+lui $at, $zero, 0x1001
+sb $s2, 0x1($at)
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x0
+addiu $a2, $zero, 0x2
+syscall
+j 0x1000a6
+lui $at, $zero, 0xffff
+ori $at, $at, 0x0
+add $s2, $at, $s2
+srl $t8, $zero, 0xa
+andi $t7, $s2, 0x3ff
+ori $s1, $zero, 0xd800
+add $t8, $s1, $t8
+ori $s1, $zero, 0xdc00
+add $t7, $s1, $t7
+addiu $t3, $zero, 0x1
+addiu $t4, $zero, 0x2
+beq $s0, $t3, 0x1
+beq $s0, $t4, 0x19
+addu $s2, $t8, $zero
+lui $at, $zero, 0x1001
+sb $s2, 0x0($at)
+srl $s2, $zero, 0x8
+lui $at, $zero, 0x1001
+sb $s2, 0x1($at)
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x0
+addiu $a2, $zero, 0x2
+syscall
+addu $s2, $t7, $zero
+lui $at, $zero, 0x1001
+sb $s2, 0x0($at)
+srl $s2, $zero, 0x8
+lui $at, $zero, 0x1001
+sb $s2, 0x1($at)
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x0
+addiu $a2, $zero, 0x2
+syscall
+j 0x1000a6
+addu $s2, $t8, $zero
+lui $at, $zero, 0x1001
+sb $s2, 0x1($at)
+srl $s2, $zero, 0x8
+lui $at, $zero, 0x1001
+sb $s2, 0x0($at)
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x0
+addiu $a2, $zero, 0x2
+syscall
+addu $s2, $t7, $zero
+lui $at, $zero, 0x1001
+sb $s2, 0x1($at)
+srl $s2, $zero, 0x8
+lui $at, $zero, 0x1001
+sb $s2, 0x0($at)
+addiu $v0, $zero, 0xf
+addu $a0, $t0, $zero
+lui $at, $zero, 0x1001
+ori $a1, $at, 0x0
+addiu $a2, $zero, 0x2
+syscall
+j 0x1000a6
+addiu $v0, $zero, 0x10
+addu $a0, $s6, $zero
+syscall
+addiu $v0, $zero, 0x10
+addu $a0, $t0, $zero
+syscall
+j 0x100000
+addiu $v0, $zero, 0x10
+addu $a0, $s6, $zero
+syscall
+addiu $v0, $zero, 0x10
+addu $a0, $t0, $zero
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x314
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x200
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x31b
+addiu $v0, $zero, 0x4
+syscall
+j 0x100000
+addiu $v0, $zero, 0x10
+addu $a0, $s6, $zero
+syscall
+addiu $v0, $zero, 0x10
+addu $a0, $t0, $zero
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x314
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x200
+addiu $v0, $zero, 0x4
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x343
+addiu $v0, $zero, 0x4
+syscall
+j 0x100000
+addiu $s7, $zero, 0x1
+beq $s0, $s7, 0xffd8
+addiu $s3, $zero, 0x2
+beq $s0, $s3, 0xffe9
+addiu $v0, $zero, 0x10
+addu $a0, $s6, $zero
+syscall
+addiu $v0, $zero, 0x10
+addu $a0, $t0, $zero
+syscall
+lui $at, $zero, 0x1001
+ori $a0, $at, 0x4c4
+addiu $v0, $zero, 0x4
+syscall
+addiu $v0, $zero, 0xa
+syscall
